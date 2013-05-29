@@ -1,0 +1,6 @@
+all:	libnss.dummy
+
+libnss.dummy:
+	make -C %VPATH% nss_build_all
+	touch libnss.dummy
+
