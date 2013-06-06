@@ -4,3 +4,6 @@ libnss.dummy:
 	make -C %VPATH% nss_build_all
 	touch libnss.dummy
 
+clean:
+	make -C %VPATH% clean
+
