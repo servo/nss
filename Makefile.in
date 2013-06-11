@@ -1,9 +1,13 @@
 all:	libnss.dummy
 
 libnss.dummy:
-	USE_64=1 BUILD_TREE=`pwd` SOURCE_XP_DIR=`pwd` SOURCE_PREFIX=%VPATH% make -C %VPATH% all
+	USE_64=1 \
+	BUILD_TREE=`pwd` \
+	SOURCE_PREFIX=`pwd` \
+	NSPR_LIB_DIR=`pwd`/../nspr/dist/lib \
+	NSS_LIB_DIR=`pwd`/dist/lib \
+	make -C %VPATH% all
 	touch libnss.dummy
 
 clean:
 	make -C %VPATH% clean
-
