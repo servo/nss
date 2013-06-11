@@ -47,7 +47,7 @@ endif
 #
 
 ifndef SOURCE_MD_DIR
-    SOURCE_MD_DIR        = $(SOURCE_PREFIX)/$(PLATFORM)
+    SOURCE_MD_DIR        = $(BUILD_TREE)/$(PLATFORM)
 endif
 
 #
