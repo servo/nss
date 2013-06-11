@@ -27,7 +27,7 @@ OBJDIR        = $(PLATFORM)
 DEPENDENCIES  = $(PLATFORM)/.md
 endif
 
-DIST          = $(SOURCE_PREFIX)/$(PLATFORM)
+DIST          = $(BUILD_TREE)/$(PLATFORM)
 
 ifdef BUILD_DEBUG_GC
     DEFINES += -DDEBUG_GC
@@ -35,9 +35,7 @@ endif
 
 GARBAGE += $(DEPENDENCIES) core $(wildcard core.[0-9]*)
 
-ifdef NSPR_INCLUDE_DIR
-    INCLUDES += -I$(NSPR_INCLUDE_DIR)
-endif
+INCLUDES += -I$(SOURCE_PREFIX)/../nspr/lib/ds -I$(SOURCE_PREFIX)/../nspr/pr/include -I$(BUILD_TREE)/../nspr/dist/include/nspr
 
 ifndef NSPR_LIB_DIR
     NSPR_LIB_DIR = $(DIST)/lib
