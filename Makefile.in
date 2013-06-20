@@ -1,13 +1,15 @@
 all:	libnss.dummy
 
+## NOTE: make must be serial because it breaks with parallel builds
+
 libnss.dummy:
 	USE_64=1 \
 	BUILD_TREE=`pwd` \
 	SOURCE_PREFIX=`pwd` \
 	NSPR_LIB_DIR=`pwd`/../nspr/dist/lib \
 	NSS_LIB_DIR=`pwd`/dist/lib \
-	make -C %VPATH% all
+	make -j1 -C %VPATH% all
 	touch libnss.dummy
 
 clean:
-	make -C %VPATH% clean
+	make -j1 -C %VPATH% clean
