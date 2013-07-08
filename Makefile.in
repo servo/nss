@@ -1,13 +1,21 @@
+TARGET=%TARGET%
+NDK_PATH=%NDK_PATH%
+API_VER=%API_VER%
+SYS_BITS=%SYS_BITS%
+
 all:	libnss.dummy
 
 ## NOTE: make must be serial because it breaks with parallel builds
 
 libnss.dummy:
-	USE_64=1 \
 	BUILD_TREE=`pwd` \
 	SOURCE_PREFIX=`pwd` \
 	NSPR_LIB_DIR=`pwd`/../nspr/dist/lib \
 	NSS_LIB_DIR=`pwd`/dist/lib \
+    ${TARGET} \
+    $(NDK_PATH) \
+    $(API_VER)\
+    $(SYS_BITS) \
 	make -j1 -C %VPATH% all
 	touch libnss.dummy
 
