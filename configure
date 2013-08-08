@@ -1,5 +1,41 @@
 #!/bin/bash
 
 SRCDIR="$(cd $(dirname $0) && pwd)"
-sed "s#%VPATH%#${SRCDIR}#g" ${SRCDIR}/Makefile.in > Makefile
 
+CONFIGURE_ARGS="$@"
+
+valopt() {
+     local OP=$1
+     local DEFAULT=$2
+     shift
+     shift
+     local DOC="$*"
+     local UOP=$(echo $OP | tr '[:lower:]' '[:upper:]' | tr '\-' '\_')
+     local V="CFG_${UOP}"
+     eval $V="$DEFAULT"
+     for arg in $CONFIGURE_ARGS
+     do
+         if echo "$arg" | grep -q -- "--$OP="
+         then
+         val=$(echo "$arg" | cut -f2 -d=)
+         eval $V=$val
+         fi
+     done
+}
+
+valopt host "" "Host triple"
+valopt android-ndk-path "/opt/android-ndk" "Android NDK path"
+valopt android-api-version 14 "Android API version"
+
+case ${CFG_HOST} in
+    arm-linux-androideabi)
+        TARGET=OS_TARGET=Android
+        NDK_PATH=ANDROID_NDK=${CFG_ANDROID_NDK_PATH}
+        API_VER=OS_TARGET_RELEASE=${CFG_ANDROID_API_VERSION}
+    ;;
+    *)
+        SYS_BITS=USE_64=1
+    ;;
+esac
+
+sed -e "s#%VPATH%#${SRCDIR}#g" -e "s#%TARGET%#${TARGET}#" -e "s#%NDK_PATH%#${NDK_PATH}#" -e "s#%API_VER%#${API_VER}#" -e "s#%SYS_BITS%#${SYS_BITS}#" ${SRCDIR}/Makefile.in > Makefile
