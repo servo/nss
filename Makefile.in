@@ -7,6 +7,14 @@ all:	libnss.dummy
 
 ## NOTE: make must be serial because it breaks with parallel builds
 
+ifeq ($(CFG_OSTYPE),linux-androideabi)
+    export OS_TARGET = Android
+    export ANDROID_NDK = /opt/android-ndk
+    export OS_TARGET_RELEASE = 14
+else
+    export USE_64 = 1
+endif
+
 libnss.dummy:
 	BUILD_TREE=`pwd` \
 	SOURCE_PREFIX=`pwd` \
