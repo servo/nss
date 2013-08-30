@@ -1,5 +1,5 @@
 TARGET=%TARGET%
-NDK_PATH=%NDK_PATH%
+NDK_TOOLCHAIN_PATH=%NDK_TOOLCHAIN_PATH%
 API_VER=%API_VER%
 SYS_BITS=%SYS_BITS%
 
@@ -12,10 +12,10 @@ libnss.dummy:
 	SOURCE_PREFIX=`pwd` \
 	NSPR_LIB_DIR=`pwd`/../nspr/dist/lib \
 	NSS_LIB_DIR=`pwd`/dist/lib \
-    ${TARGET} \
-    $(NDK_PATH) \
-    $(API_VER)\
-    $(SYS_BITS) \
+	${TARGET} \
+	$(NDK_TOOLCHAIN_PATH) \
+	$(API_VER)\
+	$(SYS_BITS) \
 	make -j1 -C %VPATH% all
 	touch libnss.dummy
 
