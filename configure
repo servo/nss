@@ -24,13 +24,13 @@ valopt() {
 }
 
 valopt host "" "Host triple"
-valopt android-ndk-path "/opt/android-ndk" "Android NDK path"
+valopt android-toolchain "/opt/android-ndk" "Android NDK toolchain path"
 valopt android-api-version 14 "Android API version"
 
 case ${CFG_HOST} in
     arm-linux-androideabi)
         TARGET=OS_TARGET=Android
-        NDK_PATH=ANDROID_NDK=${CFG_ANDROID_NDK_PATH}
+        NDK_TOOLCHAIN_PATH=ANDROID_TOOLCHAIN=${CFG_ANDROID_TOOLCHAIN}
         API_VER=OS_TARGET_RELEASE=${CFG_ANDROID_API_VERSION}
     ;;
     *)
@@ -38,4 +38,4 @@ case ${CFG_HOST} in
     ;;
 esac
 
-sed -e "s#%VPATH%#${SRCDIR}#g" -e "s#%TARGET%#${TARGET}#" -e "s#%NDK_PATH%#${NDK_PATH}#" -e "s#%API_VER%#${API_VER}#" -e "s#%SYS_BITS%#${SYS_BITS}#" ${SRCDIR}/Makefile.in > Makefile
+sed -e "s#%VPATH%#${SRCDIR}#g" -e "s#%TARGET%#${TARGET}#" -e "s#%NDK_TOOLCHAIN_PATH%#${NDK_TOOLCHAIN_PATH}#" -e "s#%API_VER%#${API_VER}#" -e "s#%SYS_BITS%#${SYS_BITS}#" ${SRCDIR}/Makefile.in > Makefile

@@ -23,19 +23,19 @@ RANLIB			= ranlib
 DEFAULT_COMPILER = gcc
 
 ifeq ($(OS_TARGET),Android)
-ifndef ANDROID_NDK
-	$(error Must set ANDROID_NDK to the path to the android NDK first)
+ifndef ANDROID_TOOLCHAIN
+	$(error Must set ANDROID_TOOLCHAIN to the path to the android NDK toolchain first)
 endif
 	ANDROID_PREFIX=$(OS_TEST)-linux-androideabi
-	ANDROID_TARGET=$(ANDROID_PREFIX)-4.4.3
-	# should autodetect which linux we are on, currently android only
-	# supports linux-x86 prebuilts
-	ANDROID_TOOLCHAIN=$(ANDROID_NDK)/toolchains/$(ANDROID_TARGET)/prebuilt/linux-x86
-	ANDROID_SYSROOT=$(ANDROID_NDK)/platforms/android-$(OS_TARGET_RELEASE)/arch-$(OS_TEST)
+	ANDROID_SYSROOT=$(ANDROID_TOOLCHAIN)/sysroot
 	ANDROID_CC=$(ANDROID_TOOLCHAIN)/bin/$(ANDROID_PREFIX)-gcc
+	ANDROID_AR=$(ANDROID_TOOLCHAIN)/bin/$(ANDROID_PREFIX)-ar
+	ANDROID_RANLIB=$(ANDROID_TOOLCHAIN)/bin/$(ANDROID_PREFIX)-ranlib
 # internal tools need to be built with the native compiler
 ifndef INTERNAL_TOOLS
 	CC = $(ANDROID_CC) --sysroot=$(ANDROID_SYSROOT)
+	AR = $(ANDROID_AR) cr $@
+	RANLIB = $(ANDROID_RANLIB)
 	DEFAULT_COMPILER=$(ANDROID_PREFIX)-gcc
 	ARCHFLAG = --sysroot=$(ANDROID_SYSROOT)
 	DEFINES += -DNO_SYSINFO -DNO_FORK_CHECK -DANDROID
@@ -127,7 +127,7 @@ endif
 # Place -ansi and *_SOURCE before $(DSO_CFLAGS) so DSO_CFLAGS can override
 # -ansi on platforms like Android where the system headers are C99 and do
 # not build with -ansi.
-STANDARDS_CFLAGS	= -D_POSIX_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE
+STANDARDS_CFLAGS	= -D_POSIX_SOURCE -D_POSIX_C_SOURCE=200112 -D_BSD_SOURCE -D_XOPEN_SOURCE -DHAVE_POSIX_FALLOCATE=0
 OS_CFLAGS		= $(STANDARDS_CFLAGS) $(DSO_CFLAGS) $(OS_REL_CFLAGS) $(ARCHFLAG) -Wall -Werror-implicit-function-declaration -Wno-switch -pipe -DLINUX -Dlinux -DHAVE_STRERROR
 OS_LIBS			= $(OS_PTHREAD) -ldl -lc
 
